@@ -1,7 +1,5 @@
 #![allow(dead_code)]
 
-use crate::core::*;
-
 use std::ops;
 use std::cmp;
 
@@ -25,11 +23,15 @@ impl Vec3 {
         self.squared_length().sqrt()
     }
 
+    pub fn inv_length(&self) -> f32 {
+        1.0 / self.squared_length().sqrt()
+    }
+
     pub fn normalize(&mut self) {
-        let k = 1.0 / self.squared_length();
-        self.e[0] /= k;
-        self.e[1] /= k;
-        self.e[2] /= k;
+        let k = self.inv_length();
+        self.e[0] *= k;
+        self.e[1] *= k;
+        self.e[2] *= k;
     }
 
     pub fn lerp(v1: &Vec3, v2: &Vec3, a: f32) -> Vec3 {
@@ -87,6 +89,9 @@ impl cmp::PartialEq for Vec3 {
     }
 }
 
+pub fn normalize(rhs: Vec3) -> Vec3 {
+    rhs * rhs.inv_length()
+}
 
 #[test]
 fn it_compute_add_of_two_vec3() {
