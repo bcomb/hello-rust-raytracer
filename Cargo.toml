@@ -1,0 +1,7 @@
+[package]
+name = "hello-rust"
+version = "0.1.0"
+authors = ["bcomb <bertrand.combes@gmail.com>"]
+edition = "2018"
+
+[dependencies]
