@@ -1,4 +1,6 @@
-mod vec3;
+mod core;
+use crate::core::*;
+
 
 fn main() {
     let v0 = vec3::Vec3::new(1.0,2.0,3.0);

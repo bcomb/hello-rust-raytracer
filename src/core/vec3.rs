@@ -1,7 +1,10 @@
 #![allow(dead_code)]
 
+use crate::core::*;
+
 use std::ops;
 use std::cmp;
+
 
 #[derive(Clone, Copy, Debug)]
 pub struct Vec3 {
@@ -53,6 +56,20 @@ impl ops::Mul for Vec3 {
 
     fn mul(self, rhs: Vec3) -> Vec3 {
         Vec3 { e: [self.e[0] * rhs.e[0], self.e[1] * rhs.e[1], self.e[2] * rhs.e[2]] }
+    }
+}
+
+impl ops::Mul<f32> for Vec3 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: f32) -> Vec3 {
+        Vec3 { e: [self.e[0] * rhs, self.e[1] * rhs, self.e[2] * rhs] }
+    }
+}
+
+impl ops::MulAssign<f32> for Vec3 {
+    fn mul_assign(&mut self, rhs: f32) {
+        *self = *self * rhs;
     }
 }
 
