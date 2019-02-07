@@ -3,3 +3,12 @@ pub use self::vec3::*;
 
 pub mod ray;
 pub use self::ray::*;
+
+pub mod camera;
+pub use self::camera::*;
+
+pub mod sphere;
+pub use self::sphere::*;
+
+pub mod hitable;
+pub use self::hitable::*;

@@ -5,3 +5,6 @@ authors = ["bcomb <bertrand.combes@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+rand = "0.6.5" # from crates.io
+#rand = { git = "https://github.com/rust-lang-nursery/rand" } # from online repo
+#bar = { path = "../bar" } # from a path in the local filesystem

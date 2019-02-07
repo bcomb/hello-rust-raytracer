@@ -1,10 +1,8 @@
 #![allow(dead_code)]
 
 use std::ops;
-use std::cmp;
 
-
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vec3 {
     pub e: [f32; 3]
 }
@@ -33,17 +31,11 @@ impl Vec3 {
         self.e[1] *= k;
         self.e[2] *= k;
     }
-
-    pub fn lerp(v1: &Vec3, v2: &Vec3, a: f32) -> Vec3 {
-        Vec3 {
-        e:  [
-            v1.e[0] + (v2.e[0] - v1.e[0]) * a,
-            v1.e[1] + (v2.e[1] - v1.e[1]) * a,
-            v1.e[2] + (v2.e[2] - v1.e[2]) * a
-            ]
-        }
-    }
 }
+
+//
+// Add traits
+//
 
 impl ops::Add for Vec3 {
     type Output = Vec3;
@@ -53,6 +45,22 @@ impl ops::Add for Vec3 {
     }
 }
 
+
+//
+// Sub traits
+//
+impl ops::Sub for Vec3 {
+    type Output = Vec3;
+
+    fn sub(self, rhs: Vec3) -> Vec3 {
+        Vec3 { e: [self.e[0] - rhs.e[0], self.e[1] - rhs.e[1], self.e[2] - rhs.e[2]] }
+    }
+}
+
+
+//
+// Mul traits
+//
 impl ops::Mul for Vec3 {
     type Output = Vec3;
 
@@ -75,6 +83,17 @@ impl ops::MulAssign<f32> for Vec3 {
     }
 }
 
+impl ops::Mul<Vec3> for f32 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: Vec3) -> Vec3 {
+        Vec3 { e: [self * rhs.e[0], self * rhs.e[1], self * rhs.e[2]] }
+    }
+}
+
+//
+// Div traits
+//
 impl ops::Div for Vec3 {
     type Output = Vec3;
 
@@ -83,16 +102,81 @@ impl ops::Div for Vec3 {
     }
 }
 
-impl cmp::PartialEq for Vec3 {
-    fn eq(&self, rhs: &Vec3) -> bool {
-        self.e[0] == rhs.e[0] && self.e[1] == rhs.e[1] && self.e[2] == rhs.e[2]
+impl ops::Div<f32> for Vec3 {
+    type Output = Vec3;
+
+    fn div(self, rhs: f32) -> Vec3 {
+        Vec3 { e: [self.e[0] / rhs, self.e[1] / rhs, self.e[2] / rhs] }
     }
 }
+
+impl ops::Div<Vec3> for f32 {
+    type Output = Vec3;
+
+    fn div(self, rhs: Vec3) -> Vec3 {
+        Vec3 { e: [self / rhs.e[0], self / rhs.e[1], self / rhs.e[2]] }
+    }
+}
+
+impl ops::DivAssign<f32> for Vec3 {
+    fn div_assign(&mut self, rhs: f32) {
+        *self = *self / rhs;
+    }
+}
+
+//
+// [] index access traits
+//
+impl ops::Index<usize> for Vec3 {
+  type Output = f32;
+
+  fn index(&self, i: usize) -> &f32 {
+    &self.e[i]
+  }
+}
+
+impl ops::IndexMut<usize> for Vec3 {
+  fn index_mut(&mut self, i: usize) -> &mut f32 {
+    &mut self.e[i]
+  }
+}
+
+//
+// Global utility function
+//
+
 
 pub fn normalize(rhs: Vec3) -> Vec3 {
     rhs * rhs.inv_length()
 }
 
+pub fn dot(v1: &Vec3, v2: &Vec3) -> f32 {
+    v1.e[0] * v2.e[0] + v1.e[1] * v2.e[1] + v1.e[2] * v2.e[2]
+}
+
+pub fn cross(v1: &Vec3, v2: &Vec3) -> Vec3 {
+    Vec3 { e: [
+                v1.e[1] * v2.e[2] - v1.e[2] * v2.e[1],
+                -(v1.e[0] * v2.e[2] - v1.e[2] * v2.e[0]),
+                v1.e[0] * v2.e[1] - v1.e[1] * v2.e[0]
+                ]}
+}
+
+pub fn lerp(v1: &Vec3, v2: &Vec3, a: f32) -> Vec3 {
+    Vec3 {
+    e:  [
+        v1.e[0] + (v2.e[0] - v1.e[0]) * a,
+        v1.e[1] + (v2.e[1] - v1.e[1]) * a,
+        v1.e[2] + (v2.e[2] - v1.e[2]) * a
+        ]
+    }
+}
+
+
+
+//
+// Unit test
+//
 #[test]
 fn it_compute_add_of_two_vec3() {
     let v0 = Vec3{e:[1.0,2.0,3.0]};
