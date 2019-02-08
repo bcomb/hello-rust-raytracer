@@ -9,7 +9,7 @@ pub struct ScatterRecord
     pub scattered: Ray
 }
 
-pub trait Material {
+pub trait Material : std::fmt::Debug {
     fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<ScatterRecord>;
 }
 
@@ -38,12 +38,12 @@ impl Material for LambertianMaterial
 // Metal material
 //
 
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct MetalMaterial {
     pub albedo: Vec3,
     pub fuzz: f32
 }
     
-
 impl Material for MetalMaterial {
     fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<ScatterRecord> {
         let reflected = reflect(&normalize(ray.direction), &hit_record.normal);

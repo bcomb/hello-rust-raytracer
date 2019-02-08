@@ -1,15 +1,16 @@
 #![allow(dead_code)]
 
 use crate::core::*;
+use std::rc::Rc;
 
 pub struct Sphere {
     center: Vec3,
     radius: f32,
-    material: Box<Material>
+    material: Rc<Material>
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f32, material: Box<Material>) -> Sphere {
+    pub fn new(center: Vec3, radius: f32, material: Rc<Material>) -> Sphere {
         Sphere{center,radius, material}
     }
 }
@@ -32,10 +33,7 @@ impl Hitable for Sphere {
                 t,
                 p,
                 normal: (p - self.center) / self.radius,
-                /*material: &*self.material,
-                // TODO: texture coords
-                u: 0.0,
-                v: 0.0*/
+                material: &*self.material,
                 });
             }
 
@@ -47,10 +45,7 @@ impl Hitable for Sphere {
                 t,
                 p,
                 normal: (p - self.center) / self.radius,
-                /*material: &*self.material,
-                // TODO: texture coords
-                u: 0.0,
-                v: 0.0*/
+                material: &*self.material,
                 });
             }
         }
