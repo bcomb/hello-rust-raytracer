@@ -10,7 +10,7 @@ pub struct ScatterRecord
 }
 
 pub trait Material {
-    fn scatter(&self, ray: Ray, hit_record: &HitRecord) -> Option<ScatterRecord>;
+    fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<ScatterRecord>;
 }
 
 
@@ -25,7 +25,7 @@ pub struct LambertianMaterial {
 
 impl Material for LambertianMaterial
 {
-    fn scatter(&self, _ray: Ray, hit_record: &HitRecord) -> Option<ScatterRecord> {
+    fn scatter(&self, _ray: &Ray, hit_record: &HitRecord) -> Option<ScatterRecord> {
         let target = hit_record.p + hit_record.normal + random_in_unit_sphere();
         let scattered = Ray::new(hit_record.p, target-hit_record.p);
         let attenuation = self.albedo;
@@ -45,7 +45,7 @@ pub struct MetalMaterial {
     
 
 impl Material for MetalMaterial {
-    fn scatter(&self, ray: Ray, hit_record: &HitRecord) -> Option<ScatterRecord> {
+    fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<ScatterRecord> {
         let reflected = reflect(&normalize(ray.direction), &hit_record.normal);
         let scattered = Ray::new(ray.origin, reflected + self.fuzz*random_in_unit_sphere());
         let attenuation = self.albedo;
