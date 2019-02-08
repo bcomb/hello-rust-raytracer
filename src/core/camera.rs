@@ -1,6 +1,5 @@
 #![allow(dead_code)]
 
-extern crate rand;
 use crate::core::*;
 use std::f32;
 
@@ -34,19 +33,10 @@ impl Camera {
         Camera { origin, lower_left_corner, horizontal, vertical, lens_radius, u, v, w }
     }
 
-  pub fn get_ray(&self, s: f32, t: f32) -> Ray {
-    let rd = self.lens_radius * random_in_unit_disk();
-    let offset = rd[0] * self.u + rd[1] * self.v;
+    pub fn get_ray(&self, s: f32, t: f32) -> Ray {
+      let rd = self.lens_radius * random_in_unit_disk();
+      let offset = rd[0] * self.u + rd[1] * self.v;
 
-    Ray::new(self.origin + offset, self.lower_left_corner + s * self.horizontal + t * self.vertical - self.origin - offset)
-  }    
-}
-
-fn random_in_unit_disk() -> Vec3 {
-  loop {
-    let p = 2.0 * Vec3::new(rand::random::<f32>(), rand::random::<f32>(), 0.0) - Vec3::new(1.0, 1.0, 0.0);
-    if dot(&p,&p) < 1.0 {
-      return p;
-    }
-  }
+      Ray::new(self.origin + offset, self.lower_left_corner + s * self.horizontal + t * self.vertical - self.origin - offset)
+    } 
 }

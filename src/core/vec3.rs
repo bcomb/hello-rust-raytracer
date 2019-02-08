@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+extern crate rand;
 use std::ops;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -45,6 +46,13 @@ impl ops::Add for Vec3 {
     }
 }
 
+impl ops::Add for &Vec3 {
+    type Output = Vec3;
+
+    fn add(self, rhs: &Vec3) -> Vec3 {
+        Vec3 { e: [self.e[0] + rhs.e[0], self.e[1] + rhs.e[1], self.e[2] + rhs.e[2]] }
+    }
+}
 
 //
 // Sub traits
@@ -57,6 +65,13 @@ impl ops::Sub for Vec3 {
     }
 }
 
+impl ops::Sub for &Vec3 {
+    type Output = Vec3;
+
+    fn sub(self, rhs: &Vec3) -> Vec3 {
+        Vec3 { e: [self.e[0] - rhs.e[0], self.e[1] - rhs.e[1], self.e[2] - rhs.e[2]] }
+    }
+}
 
 //
 // Mul traits
@@ -91,6 +106,14 @@ impl ops::Mul<Vec3> for f32 {
     }
 }
 
+impl ops::Mul<&Vec3> for f32 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: &Vec3) -> Vec3 {
+        Vec3 { e: [self * rhs.e[0], self * rhs.e[1], self * rhs.e[2]] }
+    }
+}
+
 //
 // Div traits
 //
@@ -114,6 +137,14 @@ impl ops::Div<Vec3> for f32 {
     type Output = Vec3;
 
     fn div(self, rhs: Vec3) -> Vec3 {
+        Vec3 { e: [self / rhs.e[0], self / rhs.e[1], self / rhs.e[2]] }
+    }
+}
+
+impl ops::Div<&Vec3> for f32 {
+    type Output = Vec3;
+
+    fn div(self, rhs: &Vec3) -> Vec3 {
         Vec3 { e: [self / rhs.e[0], self / rhs.e[1], self / rhs.e[2]] }
     }
 }
@@ -172,7 +203,28 @@ pub fn lerp(v1: &Vec3, v2: &Vec3, a: f32) -> Vec3 {
     }
 }
 
+pub fn reflect(v: &Vec3, n: &Vec3) -> Vec3 {
+    let ref k = 2.0*dot(v,n)*n;
+    v - k
+}
 
+pub fn random_in_unit_disk() -> Vec3 {
+  loop {
+    let p = 2.0 * Vec3::new(rand::random::<f32>(), rand::random::<f32>(), 0.0) - Vec3::new(1.0, 1.0, 0.0);
+    if dot(&p,&p) < 1.0 {
+      return p;
+    }
+  }
+}
+
+pub fn random_in_unit_sphere() -> Vec3 {
+  loop {
+    let p = 2.0 * Vec3::new(rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()) - Vec3::new(1.0, 1.0, 1.0);
+    if dot(&p,&p) < 1.0 {
+      return p;
+    }
+  }
+}
 
 //
 // Unit test

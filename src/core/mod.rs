@@ -10,5 +10,8 @@ pub use self::camera::*;
 pub mod sphere;
 pub use self::sphere::*;
 
+pub mod material;
+pub use self::material::*;
+
 pub mod hitable;
 pub use self::hitable::*;

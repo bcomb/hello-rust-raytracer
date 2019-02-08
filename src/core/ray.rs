@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 use crate::core::*;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Ray {
     pub origin: Vec3,
     pub direction: Vec3
