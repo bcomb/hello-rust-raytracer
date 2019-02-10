@@ -16,12 +16,13 @@ pub trait Hitable {
 
 pub fn closest_hit<'a>(list: &'a Vec<Box<Hitable>>,r: &Ray, tmin: f32, tmax: f32 ) -> Option<HitRecord<'a> > {
     let mut closest_hit : Option<HitRecord<'a>> = None;
-    let closest_distance = std::f32::MAX;
+    let mut closest_distance = std::f32::MAX;
     for hitable in list
     {
         if let Some(hit_record) = hitable.hit(r,tmin,tmax) {
             if hit_record.t < closest_distance {
-                closest_hit = Some(hit_record);
+                closest_distance = hit_record.t;
+                closest_hit = Some(hit_record);                
             }
         }
     }
