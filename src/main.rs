@@ -1,6 +1,7 @@
 extern crate rand;
 extern crate lodepng;
 
+
 mod core;
 use crate::core::*;
 use std::rc::Rc;
@@ -92,7 +93,7 @@ fn main() {
     // Configuration Camera/Image
     let nx = 256;
     let ny = 256;
-    let ns = 1;
+    let ns = 4;
     let ratio = nx as f32 / ny as f32;
     let lookfrom = Vec3::new(13.0,2.0,3.0);
     let lookat = Vec3::new(0.0,0.0,0.0);
@@ -107,13 +108,15 @@ fn main() {
     //println!("{} {} 255", nx, ny);
 
     let mut image = Vec::new();
-    image.resize(nx*ny*3,0u8);
-        
+    image.resize(nx*ny*3,0u8);    
+
     // Start !
+    let start_time = std::time::Instant::now();
+
     let mut offset = 0;
     for j in (0..ny).rev() {
         for i in 0..nx {
-            let mut color = Vec3::new(0.0,0.0,0.0);
+             let mut color = Vec3::new(0.0,0.0,0.0);
             for _s in 0..ns {
                 let u: f32 = (i as f32 + rand::random::<f32>()) / (nx as f32);
                 let v: f32 = (j as f32 + rand::random::<f32>()) / (ny as f32);
@@ -134,6 +137,10 @@ fn main() {
             offset += 3;
         }
     }
+    let end_time = std::time::Instant::now();
+    
+    //println!("Elapsed time {} seconds",  (end_time - start_time).as_float_secs());
+    println!("Elapsed time {} seconds",  (end_time - start_time).as_secs());
 
     let filename = "out.png";
     match lodepng::encode24_file(filename, &image, nx, ny) {
