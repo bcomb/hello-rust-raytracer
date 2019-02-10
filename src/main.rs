@@ -1,4 +1,6 @@
 extern crate rand;
+extern crate lodepng;
+
 mod core;
 use crate::core::*;
 use std::rc::Rc;
@@ -88,8 +90,8 @@ fn main() {
     let scene = random_scene();
 
     // Configuration Camera/Image
-    let nx = 512;
-    let ny = 512;
+    let nx = 256;
+    let ny = 256;
     let ns = 1;
     let ratio = nx as f32 / ny as f32;
     let lookfrom = Vec3::new(13.0,2.0,3.0);
@@ -101,10 +103,14 @@ fn main() {
     let camera = Camera::new(lookfrom, lookat, vup, vfov, ratio, aperture, dist_to_focus);
     
     // PPM header
-    println!("P3");
-    println!("{} {} 255", nx, ny);
+    //println!("P3");
+    //println!("{} {} 255", nx, ny);
+
+    let mut image = Vec::new();
+    image.resize(nx*ny*3,0u8);
         
     // Start !
+    let mut offset = 0;
     for j in (0..ny).rev() {
         for i in 0..nx {
             let mut color = Vec3::new(0.0,0.0,0.0);
@@ -118,8 +124,20 @@ fn main() {
             color = Vec3::new( color[0].sqrt(),color[1].sqrt(),color[2].sqrt() );
             color *= 255.99;
 
-            // Output rgb
-            println!("{} {} {}", color[0] as u8, color[1] as u8, color[2] as u8);
+            let r = color[0] as u8;
+            let g = color[1] as u8;
+            let b = color[2] as u8;
+
+            image[offset+0] = r;
+            image[offset+1] = g;
+            image[offset+2] = b;
+            offset += 3;
         }
     }
+
+    let filename = "out.png";
+    match lodepng::encode24_file(filename, &image, nx, ny) {
+        Ok(()) => {}
+        Err(err) => println!("Error writing file \"{}\": {}", filename, err)
+    }    
 }
