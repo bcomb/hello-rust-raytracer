@@ -4,4 +4,4 @@ http://www.realtimerendering.com/raytracing
 https://github.com/petershirley/raytracinginoneweekend
 
 Usage: 
-cargo run --release > image.ppm
+cargo run --release
